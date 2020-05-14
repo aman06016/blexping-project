@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <form action="{% url 'create_blog' %}" method="post">
+      {% csrf_token %}
+      Title: <br>
+      <input type="text" name="title"><br><br>
+      Date: <br>
+      <input type="date" name="date"><br><br>
+      body: <br>
+      <input type="textbox" name="body"><br><br>
+
+
+      <input type="submit" value="submit">
+
+{% endblock %}
