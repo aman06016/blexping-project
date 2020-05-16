@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+{% if error %}
+{{error}}
+{% endif %}
     <form action="{% url 'create_blog' %}" method="post">
       {% csrf_token %}
       Title: <br>

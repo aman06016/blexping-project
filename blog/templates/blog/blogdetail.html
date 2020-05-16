@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <h1>{{ blog.title }}</h1>
+  <h6>{{ blog.date }}</h6>
+  <h5>{{ blog.author }}</h5>
+  <br><br>
+  <h3>{{ blog.body }}</h3>
+  <br><br><br>
+
+  <form  action="{% url 'upvote' blog.id %}" method="post">
+    {% csrf_token %}
+    <label for="likes">likes : </label>
+    <input type="submit" name="likes" value="{{ blog.likes }}">
+  </form>
+
+{% endblock %}

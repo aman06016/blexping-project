@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.http import HttpResponse as ht
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def signup(request):
@@ -26,6 +27,11 @@ def signup(request):
 
 
 def login(request):
+    #print('aman',request)
+    #print('amang',request.GET)
+    #print('amangu',request.GET['next'])
+    #print(type(request.GET))
+
     if(request.method=='POST'):
 
         user=auth.authenticate(username=request.POST['username'] ,password=request.POST['password'])
@@ -35,11 +41,15 @@ def login(request):
 
         else:
             auth.login(request,user)
+
             return redirect('home')
+
+
 
     else:
         return render(request,'account/login.html')
 
+@login_required
 def logout(request):
     auth.logout(request)
-    return render(request,'home.html')
+    return redirect('home')

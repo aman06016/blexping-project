@@ -1,10 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
- Home page
+ Home page<br>
 
 {% if user.is_authenticated %}
- <h1> create blog:</h1>
- <a href="{% url 'create_blog' %}">link</a>
+
+ <a href="{% url 'create_blog' %}"><h1> create blog:</h1></a><br>
+
  {% endif %}
+
+  {% for blog in blogs %}
+
+
+      <a href="{% url 'blogdetail' blog.id %}"><h2>{{ blog.title }}</h2></a>
+                  <a href="#"><h5>{{ blog.author }}</h5></a>
+                  <h6>{{ blog.date }}</h6>
+                  <h4>{{ blog.body }}</h4>
+                  <br><br><br><br><br><br>
+
+
+
+  {% endfor %}
+
 {% endblock %}
