@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from .models import Blog
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 # Create your views here.
 @login_required
 def create(request):
@@ -14,15 +15,17 @@ def create(request):
             #print(request.user,"iloveu")
             b.author=request.user
             b.save()
-            return redirect('home')
+            address='/blog/profile/'
+            address+= str(b.id)
+            address+='/'
+            return redirect(address)
         else:
             return render(request,'blog/create.html',{'error': ' you must fill all of the form'})
 
     else:
         return render(request,'blog/create.html')
 
-def delete(request):
-    return render(request,'blog/delete.html')
+
 
 def blogdetail(request, blog_id):
     blog=Blog.objects.get(pk=blog_id)
@@ -37,3 +40,26 @@ def upvote(request, blogid):
 
     blog.save()
     return render(request,'blog/blogdetail.html',{'blog' : blog })
+
+def profile(request,blogid):
+
+    blog=Blog.objects.get(pk=blogid)
+    user=User.objects.get(username=blog.author)
+    allblog=Blog.objects.filter(author=user)
+    return render(request,'blog/profile.html',{'userr':user,'blogs':allblog})
+
+def profileuser(request,userid):
+
+    user=User.objects.get(pk=userid)
+    allblog=Blog.objects.filter(author=user)
+    return render(request,'blog/profile.html',{'userr':user,'blogs':allblog})
+
+def delete(request,blogid):
+    blog=Blog.objects.get(pk=blogid)
+    user=User.objects.get(username=blog.author)
+
+    blog=Blog.objects.get(pk=blogid)
+    blog.delete()
+
+    allblog=Blog.objects.filter(author=user)
+    return render(request,'blog/profile.html',{'userr':user,'blogs':allblog})

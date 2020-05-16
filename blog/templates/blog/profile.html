@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<br><br><br><br><br><br>
+
+<center><h1> {{ userr.username }}  BLOG page : </h1><br><br></center>
+{% if user.is_authenticated %}
+{% if user == userr %}
+<a href="{% url 'create_blog' %}"><h3>create new blog</h3></a>
+{% endif %}
+{% endif %}
+
+<h2> here are authors creations till now :</h2><br><br>
+
+{% for blog in blogs %}
+
+
+    <a href="{% url 'blogdetail' blog.id %}"><h2>{{ blog.title }}</h2></a>
+                <a href="#"><h5>{{ blog.author }}</h5></a>
+                <h6>{{ blog.date }}</h6>
+                <h4>{{ blog.body }}</h4>
+                <h6> likes : {{ blog.likes }} </h6>
+                {% if user.is_authenticated %}
+                {% if user == blog.author %}
+                <h4><a href="{% url 'delete_blog' blog.id  %}">Delete</a></h4>
+                {% endif %}
+                {% endif %}
+
+                <br><br><br><br><br><br>
+
+
+
+{% endfor %}
+
+
+{% endblock %}
