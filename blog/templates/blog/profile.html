@@ -8,6 +8,7 @@
 <center><h1> {{ userr.username }}  BLOG page : </h1><br><br></center>
 {% if user.is_authenticated %}
 {% if user == userr %}
+<a href="{% url 'delete_account' userr.id %}"><h3 >delete account</h3></a>
 <a href="{% url 'create_blog' %}"><h3>create new blog</h3></a>
 {% endif %}
 {% endif %}

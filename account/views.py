@@ -53,3 +53,10 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return redirect('home')
+'''
+def trial(request,fis,sec):
+    print('aman')
+    print('aman',fis)
+    print('aman',sec)
+    return render(request,'account/trial.html')
+'''

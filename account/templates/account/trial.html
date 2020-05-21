@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% if error %}
+    {{error}}<br>
+    {% endif %}
+    <form  method="post" action="{% url 'trial' "lund" "gand"  %}">
+      {% csrf_token %}
+      Username:<br>
+      <input type="text" name="username"><br><br>
+
+      <input type="submit" value="submit">
+    </form>
+
+  {% endblock %}

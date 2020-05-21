@@ -17,6 +17,10 @@ from django.contrib import admin
 from django.urls import path, include
 from . import views
 
+admin.site.site_header="BlexPing admin"
+admin.site.site_title="Aman_Creation"
+admin.site.index_title="welcome to Blog world"
+
 urlpatterns = [
     path('',views.home,name='home'),
     path('blog/',include('blog.urls')),

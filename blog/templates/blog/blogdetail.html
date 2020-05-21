@@ -2,6 +2,8 @@
 
 {% block content %}
 
+  {% load extras %}
+
   <h1>{{ blog.title }}</h1>
   <h6>{{ blog.date }}</h6>
   <a href="{% url 'profile' blog.id %}"><h5>{{ blog.author }}</h5></a>
@@ -14,5 +16,84 @@
     <label for="likes">likes : </label>
     <input type="submit" name="likes" value="{{ blog.likes }}">
   </form>
+  <br>
+  <center><b> <h2>COMMENTS</h2></b></center>
+
+<button type="button" name="reply" onclick="func('xxxx')">reply</button>
+
+<form  action="{% url 'make_commentt' blog.id %}" method="post" >
+  {% csrf_token %}
+  <p id="xxxx" style="visibility : hidden;">
+    <input  type="text" size="150" placeholder="reply here" name="comment" />
+    <input type="submit"  value="submit"/>
+  </p>
+</form>
+
+
+
+  {% for comment in comments %}
+
+<!-- showing individual comments -->
+      <p>{{comment.timestamp}}</p>
+      <p><b><a href="{% url 'profileuser' comment.writer.id  %}">{{comment.writer}} </a>: </b>
+      {% if comment.parent %}
+         <a href="{% url 'profileuser' comment.parent.writer.id %}" style= "color : green;" >@{{comment.parent.writer}}</a>  {{comment.body}}
+      {% else %}
+        <a href="{% url 'profile' blog.id %}" style= "color : green;" >@{{blog.author}}</a>  {{comment.body}}
+      {% endif %}
+      </p>
+      <p><b>upvote :</b> {{comment.upvote}}  <b>downvote : </b> {{comment.downvote}}
+        <button type="button" name="reply" onclick="func({{comment.id}})">reply</button></p>
+
+    <!-- showing reply form -->
+      <form  action="{% url 'make_comment' blog.id comment.id %}" method="post" >
+        {% csrf_token %}
+        <p id="{{comment.id}}" style="visibility : hidden;">
+          <input  type="text" size="150" placeholder="reply here" name="comment" />
+          <input type="submit"  value="submit"/>
+        </p>
+      </form>
+
+<!-- showing individula reply -->
+
+
+    <div style="margin-left:60px;">
+      {% for rep in repList|getList:comment.id  %}
+
+
+          <p>{{rep.timestamp}}</p>
+          <p><b><a href="{% url 'profileuser' rep.writer.id  %}">{{rep.writer}} </a>: </b>
+
+          <a href="{% url 'profileuser' rep.parent.writer.id %}" style= "color : green;" >@{{rep.parent.writer}}</a>  {{rep.body}}
+
+          </p>
+          <p><b>upvote :</b> {{rep.upvote}}  <b>downvote : </b> {{rep.downvote}}</p>
+          <br><br>
+
+      {% endfor%}
+    </div>
+
+
+
+  <br><br>
+
+  {% endfor %}
+
+
+
+  <br><br><br><br><br><br>
+
+
+  <script type="text/javascript">
+    function func(x){
+      obj=document.getElementById(x).style.visibility = "visible";
+    }
+
+  </script>
+
+
+
+
+
 
 {% endblock %}
