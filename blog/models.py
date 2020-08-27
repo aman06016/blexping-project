@@ -20,7 +20,8 @@ class Comment(models.Model):
     timestamp=models.DateTimeField(default=now)
     upvote=models.IntegerField(default=0)
     downvote=models.IntegerField(default=0)
-    parent=models.ForeignKey('self',null=True,blank=True, on_delete=models.CASCADE)
+    parent=models.ForeignKey('self',null=True,blank=True, on_delete=models.CASCADE, related_name='for_parents')
+    mention=models.ForeignKey('self',null=True,blank=True, on_delete=models.CASCADE, related_name='for_mention')
 
     def __str__(self):
         return (self.body[:10] + '.... by ' + str(self.writer))

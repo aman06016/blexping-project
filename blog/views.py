@@ -40,8 +40,7 @@ def blogdetail(request, blog_id):
             repList[rep.parent.id].append(rep)
         else:
             repList[rep.parent.id]=[rep]
-    print(repList)
-
+    #print(repList)
 
     return render(request, 'blog/blogdetail.html',{'blog' : blog,'comments':comments ,'repList':repList})
 
@@ -95,7 +94,7 @@ def delete_account(request,accid):
     return redirect('home')
 
 @login_required
-def make_commentt(request,blogid):
+def make_comment1(request,blogid):
     #print('gupta')
     #print('gupta' , blogid)
 
@@ -119,13 +118,13 @@ def make_commentt(request,blogid):
             repList[rep.parent.id].append(rep)
         else:
             repList[rep.parent.id]=[rep]
-    print(repList)
+    #print(repList)
 
 
     return render(request, 'blog/blogdetail.html',{'blog' : blog,'comments':comments ,'repList':repList})
 
 @login_required
-def make_comment(request,blogid,commentid):
+def make_comment2(request,blogid,commentid):
     #print('aman')
     #print('aman' , blogid)
     #print('aman',commentid)
@@ -139,6 +138,58 @@ def make_comment(request,blogid,commentid):
     obj.save()
     #comments=Comment.objects.filter(post=blog)
     #return render(request, 'blog/blogdetail.html',{'blog' : blog,'comments':comments })
+
+    comments=Comment.objects.filter(post=blog,parent=None)
+    replies=Comment.objects.filter(post=blog).exclude(parent=None)
+
+    repList={}
+    for rep in replies:
+        if(rep.parent.id in repList.keys()):
+            repList[rep.parent.id].append(rep)
+        else:
+            repList[rep.parent.id]=[rep]
+    #print(repList)
+
+
+    return render(request, 'blog/blogdetail.html',{'blog' : blog,'comments':comments ,'repList':repList})
+
+@login_required
+def make_comment3(request,blogid,commentid,repid):
+    #print('aman')
+    #print('aman' , blogid)
+    #print('aman',commentid)
+    blog=Blog.objects.get(pk=blogid)
+    commentobj=Comment.objects.get(pk=commentid)
+    toMention= Comment.objects.get(pk=repid)
+    obj=Comment()
+    obj.body=request.POST['comment']
+    obj.writer=request.user
+    obj.post=blog
+    obj.parent=commentobj
+    obj.mention=toMention
+
+    obj.save()
+    #comments=Comment.objects.filter(post=blog)
+    #return render(request, 'blog/blogdetail.html',{'blog' : blog,'comments':comments })
+
+    comments=Comment.objects.filter(post=blog,parent=None)
+    replies=Comment.objects.filter(post=blog).exclude(parent=None)
+
+    repList={}
+    for rep in replies:
+        if(rep.parent.id in repList.keys()):
+            repList[rep.parent.id].append(rep)
+        else:
+            repList[rep.parent.id]=[rep]
+    #print(repList)
+
+    return render(request, 'blog/blogdetail.html', {'blog' : blog,'comments':comments ,'repList':repList})
+
+def deleteComment(request, commentid):
+
+    obj=Comment.objects.get(pk=commentid)
+    blog=obj.post
+    obj.delete()
 
     comments=Comment.objects.filter(post=blog,parent=None)
     replies=Comment.objects.filter(post=blog).exclude(parent=None)

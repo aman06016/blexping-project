@@ -11,8 +11,10 @@ urlpatterns = [
     path('delete/<int:blogid>/',views.delete_blog, name='delete_blog'),
     path('deleteaccount/<int:accid>/', views.delete_account, name='delete_account'),
 
-    path('newcomment/<int:blogid>/',views.make_commentt,name='make_commentt'),
-    path('newcomment/<int:blogid>/<int:commentid>/',views.make_comment,name='make_comment')
+    path('newcomment/<int:blogid>/',views.make_comment1,name='make_comment1'),
+    path('newcomment/<int:blogid>/<int:commentid>/',views.make_comment2,name='make_comment2'),
+    path('newcomment/<int:blogid>/<int:commentid>/<int:repid>',views.make_comment3,name='make_comment3'),
+    path('deletecomment/<int:commentid>/', views.deleteComment, name='deleteComment')
 
 
 

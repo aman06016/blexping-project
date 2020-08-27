@@ -11,6 +11,7 @@
   <h3>{{ blog.body }}</h3>
   <br><br><br>
 
+<!-- upvote button-->
   <form  action="{% url 'upvote' blog.id %}" method="post">
     {% csrf_token %}
     <label for="likes">likes : </label>
@@ -19,9 +20,10 @@
   <br>
   <center><b> <h2>COMMENTS</h2></b></center>
 
+<!-- reply button-->
 <button type="button" name="reply" onclick="func('xxxx')">reply</button>
 
-<form  action="{% url 'make_commentt' blog.id %}" method="post" >
+<form  action="{% url 'make_comment1' blog.id %}" method="post" >
   {% csrf_token %}
   <p id="xxxx" style="visibility : hidden;">
     <input  type="text" size="150" placeholder="reply here" name="comment" />
@@ -34,19 +36,26 @@
   {% for comment in comments %}
 
 <!-- showing individual comments -->
-      <p>{{comment.timestamp}}</p>
-      <p><b><a href="{% url 'profileuser' comment.writer.id  %}">{{comment.writer}} </a>: </b>
-      {% if comment.parent %}
-         <a href="{% url 'profileuser' comment.parent.writer.id %}" style= "color : green;" >@{{comment.parent.writer}}</a>  {{comment.body}}
-      {% else %}
-        <a href="{% url 'profile' blog.id %}" style= "color : green;" >@{{blog.author}}</a>  {{comment.body}}
-      {% endif %}
+      <p>{{comment.timestamp}}
+        <!-- deleting reply-->
+        {% if user.is_authenticated %}
+        {% if comment.writer == user %}
+        <a href="#">delete</a>
+        {% endif %}
+        {% endif %}
+
       </p>
-      <p><b>upvote :</b> {{comment.upvote}}  <b>downvote : </b> {{comment.downvote}}
-        <button type="button" name="reply" onclick="func({{comment.id}})">reply</button></p>
+      <p>
+        <b><a href="{% url 'profileuser' comment.writer.id  %}">{{comment.writer}} </a>: </b>
+        {{comment.body}}
+      </p>
+      <p>
+        <b>upvote :</b> {{comment.upvote}}  <b>downvote : </b> {{comment.downvote}}
+        <button type="button" name="reply" onclick="func({{comment.id}})">reply</button>
+      </p>
 
     <!-- showing reply form -->
-      <form  action="{% url 'make_comment' blog.id comment.id %}" method="post" >
+      <form  action="{% url 'make_comment2' blog.id comment.id %}" method="post" >
         {% csrf_token %}
         <p id="{{comment.id}}" style="visibility : hidden;">
           <input  type="text" size="150" placeholder="reply here" name="comment" />
@@ -58,17 +67,43 @@
 
 
     <div style="margin-left:60px;">
+
       {% for rep in repList|getList:comment.id  %}
 
 
-          <p>{{rep.timestamp}}</p>
-          <p><b><a href="{% url 'profileuser' rep.writer.id  %}">{{rep.writer}} </a>: </b>
+            <p>{{rep.timestamp}}
+              <!-- deleting reply-->
+              {% if user.is_authenticated %}
+              {% if rep.writer == user %}
+              <a href="{% url 'deleteComment' rep.id %}">delete</a>
+              {% endif %}
+              {% endif %}
 
-          <a href="{% url 'profileuser' rep.parent.writer.id %}" style= "color : green;" >@{{rep.parent.writer}}</a>  {{rep.body}}
+            </p>
+            <p>
+                <b><a href="{% url 'profileuser' rep.writer.id  %}">{{rep.writer}} </a>: </b>
+                {% if rep.mention %}
+                <a href="{% url 'profileuser' rep.mention.writer.id %}" style= "color : green;" >@{{rep.mention.writer}}</a>
+                {% else %}
+                <a href="{% url 'profileuser' rep.parent.writer.id %}" style= "color : green;" >@{{rep.parent.writer}}</a>
+                {% endif %}
+                {{rep.body}}
+            </p>
 
-          </p>
-          <p><b>upvote :</b> {{rep.upvote}}  <b>downvote : </b> {{rep.downvote}}</p>
-          <br><br>
+            <p>
+              <b>upvote :</b> {{rep.upvote}}  <b>downvote : </b> {{rep.downvote}}
+              <button type="button" name="reply" onclick="func({{rep.id}})">reply</button>
+           </p>
+            
+
+            <!-- showing reply form -->
+              <form  action="{% url 'make_comment3' blog.id comment.id rep.id %}" method="post" >
+                {% csrf_token %}
+                <p id="{{rep.id}}" style="visibility : hidden;">
+                  <input  type="text" size="150" placeholder="reply here" name="comment" />
+                  <input type="submit"  value="submit"/>
+                </p>
+              </form>
 
       {% endfor%}
     </div>
